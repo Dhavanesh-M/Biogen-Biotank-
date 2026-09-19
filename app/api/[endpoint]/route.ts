@@ -19,7 +19,7 @@ export async function POST(request: Request, { params }: { params: { endpoint: s
 	try {
 		const resend = new Resend(process.env.RESEND_API_KEY);
 		const subject = `BioGen ${params.endpoint} lead: ${parsed.data.name}`;
-		await resend.emails.send({ from: process.env.LEAD_FROM_EMAIL, to: process.env.LEAD_TO_EMAIL, subject, text: [`Name: ${parsed.data.name}`, `Email: ${parsed.data.email}`, `Phone: ${parsed.data.phone}`, `Project: ${parsed.data.projectType}`, `Message: ${parsed.data.message}`, `Locale: ${parsed.data.locale}`].join('\n') });
+		await resend.emails.send({ from: process.env.LEAD_FROM_EMAIL, to: process.env.LEAD_TO_EMAIL, subject, text: [`Name: ${parsed.data.name}`, `Email: ${parsed.data.email}`, `Phone: ${parsed.data.phone}`, `Project: ${parsed.data.projectType}`, `Model: ${parsed.data.model}`, `Message: ${parsed.data.message}`, `Locale: ${parsed.data.locale}`].join('\n') });
 		// Optional Google Sheets/Airtable forwarding runs only when its environment variables are configured.
 		try { await storeLead(params.endpoint, parsed.data); } catch (storageError) { console.error('Optional lead storage failed', storageError); }
 		return NextResponse.json({ ok: true, message: successMessage(locale) });
