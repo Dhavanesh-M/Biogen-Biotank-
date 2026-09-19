@@ -1,0 +1,8 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import sharp from 'sharp';
+const root = process.cwd(); const brand = path.join(root, 'public', 'brand'); const source = path.join(brand, 'logo-light.svg'); const fallback = path.join(brand, 'logo.png'); const input = await fs.access(source).then(() => source).catch(() => fallback); const raw = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+for (let index = 0; index < raw.data.length; index += 4) { if (raw.data[index] > 242 && raw.data[index + 1] > 242 && raw.data[index + 2] > 242) raw.data[index + 3] = 0; }
+const transparent = sharp(raw.data, { raw: raw.info });
+await transparent.png().toFile(path.join(brand, 'logo-light.png')); await transparent.resize({ width: 512, height: 512, fit: 'contain', background: { r: 5, g: 5, b: 5, alpha: 0 } }).png().toFile(path.join(brand, 'icon-512.png')); await transparent.resize({ width: 192, height: 192, fit: 'contain', background: { r: 5, g: 5, b: 5, alpha: 0 } }).png().toFile(path.join(brand, 'icon-192.png')); await transparent.resize({ width: 180, height: 180, fit: 'contain', background: { r: 5, g: 5, b: 5, alpha: 0 } }).png().toFile(path.join(brand, 'apple-touch-icon.png')); await transparent.resize({ width: 96, height: 96, fit: 'contain', background: { r: 5, g: 5, b: 5, alpha: 0 } }).png().toFile(path.join(brand, 'favicon.png'));
+console.log(`Generated light logo treatment from ${path.basename(input)}.`);

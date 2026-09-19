@@ -1,0 +1,5 @@
+'use client';
+import { useEffect, useRef } from 'react';
+import { X } from 'lucide-react';
+import type { VideoEntry } from '../data/media';
+export function VideoModal({ video, open, onClose }: { video: VideoEntry; open: boolean; onClose: () => void }) { const ref = useRef<HTMLVideoElement>(null); useEffect(() => { if (!open) return; ref.current?.play().catch(() => undefined); const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); }; window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey); }, [open, onClose]); if (!open) return null; return <div className="video-modal" role="dialog" aria-modal="true" aria-label={video.title} onClick={onClose}><div className="video-modal-inner" onClick={(event) => event.stopPropagation()}><button className="icon-button video-close" onClick={onClose} aria-label="Close video"><X /></button><video ref={ref} src={video.src} poster={video.poster} controls playsInline /></div></div>; }

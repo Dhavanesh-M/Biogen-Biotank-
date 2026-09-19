@@ -1,0 +1,2 @@
+import Image from 'next/image';
+export function Logo({ variant = 'full' }: { variant?: 'full' | 'mark' }) { return <Image className={`logo-image logo-${variant}`} src={variant === 'mark' ? '/brand/icon-192.png' : '/brand/logo-light.png'} width={variant === 'mark' ? 28 : 126} height={variant === 'mark' ? 28 : 48} alt="BioGen Biotank" priority />; }

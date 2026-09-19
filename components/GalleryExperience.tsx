@@ -1,0 +1,8 @@
+'use client';
+import Image from 'next/image';
+import { useState } from 'react';
+import { SitePhotos } from './SitePhotos';
+import { VideoPlayer } from './VideoPlayer';
+import { videos } from '../data/media';
+import { useTranslations } from 'next-intl';
+export function GalleryExperience() { const t = useTranslations('gallery'); const [tab, setTab] = useState<'Videos' | 'Posters' | 'Our Sites'>('Videos'); const process = videos.find((video) => video.slug === 'biogen-process')!; const labels = { Videos: t('videos'), Posters: t('posters'), 'Our Sites': t('sites') }; return <section className="gallery-experience"><div className="gallery-tabs">{(Object.keys(labels) as (keyof typeof labels)[]).map((item) => <button className={tab === item ? 'active' : ''} onClick={() => setTab(item)} key={item}>{labels[item]}</button>)}</div>{tab === 'Videos' && <div className="media-grid"><article className="media-card"><VideoPlayer video={process} /><p className="eyebrow">{t('videos')}</p><h2>{t('processFilm')}</h2><p>{process.description}</p></article><article className="media-card"><Image src="/posters/hero-last-frame.jpg" alt={t('productFilm')} width={1920} height={1080} sizes="(max-width: 800px) 100vw, 50vw" /><p className="eyebrow">{t('videos')}</p><h2>{t('productFilm')}</h2><p>{process.description}</p></article></div>}{tab === 'Posters' && <div className="poster-grid"><Image src="/posters/hero-first-frame.jpg" alt={t('productFilm')} width={1920} height={1080} /><Image src="/posters/hero-last-frame.jpg" alt={t('processFilm')} width={1920} height={1080} /></div>}{tab === 'Our Sites' && <SitePhotos />}</section>; }

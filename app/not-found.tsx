@@ -1,0 +1,3 @@
+import Link from 'next/link';
+import { Logo } from '../components/Logo';
+export default function NotFound(){return <main className="page"><section className="page-header"><Logo variant="mark" /><p className="eyebrow">404 <span>•</span> OFF COURSE</p><h1>Nothing<br /><i>hidden here.</i></h1><p>The page you are looking for has moved on. The cycle continues.</p><Link href="/" className="button">Back to home <span>↗</span></Link></section></main>}

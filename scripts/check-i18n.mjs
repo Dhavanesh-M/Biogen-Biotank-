@@ -1,0 +1,6 @@
+import fs from 'node:fs/promises';
+const files = ['en', 'hi', 'ta']; const read = async (name) => JSON.parse(await fs.readFile(`messages/${name}.json`, 'utf8'));
+const flatten = (value, prefix = '') => Object.entries(value).flatMap(([key, item]) => typeof item === 'object' && item !== null ? flatten(item, prefix ? `${prefix}.${key}` : key) : [prefix ? `${prefix}.${key}` : key]);
+const catalogs = Object.fromEntries(await Promise.all(files.map(async (name) => [name, flatten(await read(name))]))); const source = new Set(catalogs.en); let failed = false;
+for (const locale of ['hi', 'ta']) { const keys = new Set(catalogs[locale]); const missing = [...source].filter((key) => !keys.has(key)); const unused = [...keys].filter((key) => !source.has(key)); if (missing.length) { console.error(`${locale} missing: ${missing.join(', ')}`); failed = true; } if (unused.length) console.warn(`${locale} unused: ${unused.join(', ')}`); }
+if (failed) process.exit(1); console.log(`i18n check passed: ${source.size} keys across en, hi, ta.`);

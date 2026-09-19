@@ -1,0 +1,6 @@
+'use client';
+import { X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { usePathname, useRouter } from '../i18n/navigation';
+export function LanguageBanner() { const locale = useLocale(); const t = useTranslations('languages'); const pathname = usePathname(); const router = useRouter(); const [suggested, setSuggested] = useState<string>(); const [visible, setVisible] = useState(false); useEffect(() => { if (locale !== 'en' || document.cookie.includes('NEXT_LOCALE=')) return; const browser = navigator.languages.find((item) => item.startsWith('hi') || item.startsWith('ta')); if (browser) { const next = browser.startsWith('hi') ? 'hi' : 'ta'; setSuggested(next); setVisible(true); } }, [locale]); if (!visible || !suggested) return null; const accept = () => { document.cookie = `NEXT_LOCALE=${suggested};path=/;max-age=31536000;samesite=lax`; router.replace(pathname, { locale: suggested as 'hi' | 'ta' }); setVisible(false); }; return <div className="language-banner" role="status"><span>{t('suggest', { language: t(suggested) })}</span><button onClick={accept}>View</button><button className="banner-dismiss" onClick={() => setVisible(false)} aria-label={t('dismiss')}><X size={14} /></button></div>; }
